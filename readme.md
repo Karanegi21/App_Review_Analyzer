@@ -322,17 +322,6 @@ This expands each step and why it exists.
 
 ---
 
-## License & contact
-This project does not include a license by default — add one based on your preference. Example (MIT):
-
-```text
-MIT License
-Copyright (c) <year> <owner>
-Permission is hereby granted, free of charge, to any person obtaining a copy...
-```
-
-**Contact / author**: Nitin Chauhan (or update to your name/email in the file header).
-
 ---
 
 ## Appendix: Helpful snippets
