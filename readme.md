@@ -1,89 +1,82 @@
-# App Review Analysis Pipeline — README.md
-
-**Auto-generated end-to-end pipeline for Google Play review intelligence**
-
-Scrape → Clean → Sentiment → Topic Modeling → Embeddings → LLM-powered categorization & clustering → Charts → Auto PPT Report
-This repository provides a robust end-to-end system that turns Google Play reviews into stakeholder-ready insights and a PowerPoint report. 
-The pipeline combines classical NLP (VADER, TextBlob, LDA) with modern vector embeddings and LLMs (OpenAI) to produce package-specific findings and actionable recommendations.
-
--------
-### Note on Embedding Step
-The embedding step (Step 5) is useful for advanced semantic search and clustering.  
-However, for some apps with very large or restricted review text (e.g., Instagram),  
-the embedding step may fail or take very long.  
-
-**Solution:**  
-- If you face issues with embeddings, you can temporarily disable Step 5 in the code.  
-- The pipeline will still run properly and generate sentiment analysis, word clouds, and charts without embeddings.  
--------
-
+# App Review Intelligence Pipeline  
+**Automated NLP + LLM system for turning Google Play reviews into product insights**
 
 ---
 
+## 🔄 Pipeline Flow  
+`Scrape → Preprocess → Sentiment → Topics → Embeddings & Clustering → LLM Categorization → Visuals → PPT Report`
 
-## Table of contents
-1. [Project overview](#project-overview)
-2. [Key features](#key-features)
-3. [Architecture & flow](#architecture--flow)
-4. [Quick demo (what you'll get)](#quick-demo-what-youll-get)
-5. [Requirements & supported versions](#requirements--supported-versions)
-6. [Installation](#installation)
-7. [Configuration / Environment variables](#configuration--environment-variables)
-8. [How to run (examples)](#how-to-run-examples)
-9. [Outputs and file map and How findings & recommendations are generated (dynamic)](#outputs-and-file-map)
-10. [Detailed step-by-step explanation of pipeline components](#detailed-step-by-step-explanation-of-pipeline-components)
-11. [LLM usage, batching & cost-control tips](#llm-usage-batching--cost-control-tips)
-12. [Troubleshooting — common errors & fixes ](#troubleshooting--common-errors--fixes)
-13. [Productionization & extension ideas](#productionization--extension-ideas)
-14. [Developer notes & contribution guide](#developer-notes--contribution-guide)
-15. [License & contact](#license--contact)
+This project provides an **end-to-end review analytics workflow**. It combines:  
+- **Classical NLP** (VADER, TextBlob, LDA)  
+- **Modern AI methods** (OpenAI embeddings, GPT-3.5)  
+
+The result: **structured findings, key themes, and actionable recommendations**, all exported into a **PowerPoint deck** for stakeholders.
 
 ---
 
-## Project overview
-This repository contains a single-file (prototype) Python pipeline that automates review intelligence for Google Play apps. Give the script a package name (e.g. `com.nextbillion.groww`) and it will:
+## ⚠️ Note on Embeddings
+Step 5 (embeddings + clustering) can sometimes be **slow or unstable** when working with very large or restricted review text (e.g., Instagram).  
 
-- Scrape English reviews from Google Play (India locale by default)
-- Clean and preprocess review text
-- Run multi-method sentiment analysis (VADER + TextBlob)
-- Extract topics with LDA
-- Create embeddings using OpenAI `text-embedding-3-small` and cluster them (KMeans)
-- Use **GPT-3.5 (gpt-3.5-turbo)** to auto-categorize reviews and name clusters
-- Produce charts (pie, bar, Pareto, word clouds, time series)
-- Auto-generate a branded PowerPoint report (`.pptx`) with dynamic recommendations
-
-This is ideal for product managers, analysts, or engineers who want an automated, reproducible way to extract actionable insights from app reviews.
+**Quick Fix:** Disable Step 5 in the code if needed. The rest of the pipeline (sentiment, LDA, charts, report) will still work fine.
 
 ---
 
-## Key features
-- ✅ End-to-end automation: scraping → analysis → reporting
-- ✅ Dual sentiment (VADER for short text, TextBlob for polarity summary)
-- ✅ LDA topic modeling to surface common themes
-- ✅ Semantic clustering with OpenAI embeddings + KMeans
-- ✅ GPT-3.5 for human-friendly cluster names and automated issue categorization
-- ✅ Dynamic recommendations generated from analysis outputs
-- ✅ Exported charts + `python-pptx` report ready for stakeholders
+## 📑 Table of Contents
+- Project Overview  
+- Key Features  
+- Architecture & Workflow  
+- Example Output  
+- Requirements & Supported Versions  
+- Installation  
+- Config & Environment Variables  
+- Running the Script  
+- Output Files & Folder Structure  
+- How Recommendations are Created  
+- Detailed Walkthrough of Each Step  
+- LLM Usage & Cost Tips  
+- Troubleshooting Guide  
+- Scaling & Production Ideas  
+- Developer Notes & Contribution Guide  
+- License & Contact  
 
 ---
 
-## Architecture & flow
-```text
-[Google Play Scraper] -> [Cleaning] -> [Sentiment (VADER/TextBlob)]
- -> [LDA Topics] -> [OpenAI Embeddings] -> [KMeans Clustering]
- -> [GPT-3.5 cluster naming + categorization] -> [Charts / Wordclouds]
- -> [Dynamic Recommendation Generator] -> [PowerPoint Report]
-```
+## 🔎 Project Overview
+This repository contains a **single-file prototype** that can analyze Google Play reviews given just the **app package name** (e.g., `com.nextbillion.groww`).  
+
+The script will:  
+- Fetch reviews via scraper  
+- Clean and preprocess text  
+- Run sentiment analysis (VADER + TextBlob)  
+- Extract topics with LDA  
+- Create semantic clusters with embeddings (OpenAI) + KMeans  
+- Use GPT-3.5 to **categorize reviews and name clusters**  
+- Generate **charts, word clouds, Pareto plots, and time series**  
+- Export a **branded stakeholder-ready PowerPoint**  
+
+Perfect for product managers, analysts, or engineers who need **repeatable, automated insights**.
 
 ---
 
-## Quick demo (what you'll get)
-After running the script for an app package you will find a folder named exactly as the package (e.g. `com.nextbillion.groww/`). Inside:
-- CSVs with raw and cleaned reviews
-- Excel files with categorized and clustered reviews
-- PNG charts (sentiment pie, Pareto, word clouds, stacked bars, time-series)
-- Final `{AppName}_Review_Analysis_Report.pptx` with insights & recommendations
-- `execution_log.txt` with timing and any error traces
+## ✨ Key Features
+- ✅ Fully automated: from scraping → insights → report  
+- ✅ Dual sentiment detection (VADER for micro-text, TextBlob for polarity summary)  
+- ✅ LDA-based topic surfacing  
+- ✅ Semantic clustering with OpenAI embeddings + KMeans  
+- ✅ GPT-3.5 for **human-readable cluster/category naming**  
+- ✅ Automatically generated recommendations linked to findings  
+- ✅ Visuals + PowerPoint slides in one run  
+
+---
+
+## 🏗️ Architecture & Workflow
+
+[Google Play Scraper] → [Text Cleaning] → [Sentiment (VADER/TextBlob)]
+→ [LDA Topics] → [OpenAI Embeddings] → [KMeans Clustering]
+→ [GPT-3.5 Categorization + Cluster Labels]
+→ [Charts & Wordclouds] → [Dynamic Recommendations]
+→ [PowerPoint Report]
+
 
 ---
 
@@ -324,24 +317,5 @@ This expands each step and why it exists.
 
 ---
 
-## Appendix: Helpful snippets
-### Set Matplotlib headless backend
-```python
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-```
 
-### Example retry for OpenAI calls (tenacity)
-```python
-from tenacity import retry, wait_exponential, stop_after_attempt
-
-@retry(wait=wait_exponential(min=1, max=60), stop=stop_after_attempt(5))
-def call_openai(...):
-    return openai.ChatCompletion.create(...)
-```
-
----
-
-*Generated by App Review Analysis Pipeline helper — if you want I can also produce `requirements.txt`, `.env.example`, and a small `run.sh` or `main.py` wrapper.*
 
